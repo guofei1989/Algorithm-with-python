@@ -17,18 +17,18 @@ def ViolentMatch(s, p):
     i = 0   # 记录string位置
     j = 0   # 记录pattern位置
     while i < Los and j < Lop:
+
         if s[i] == p[j]:
             i += 1
             j += 1
-
+            if j == Lop:
+                print("存在匹配字符串, 对应字符串位置为{}~{}".format(i - j, i-1))
+                return
         else:
             j = 0
             i = i - (j-1)
 
-    if j == Lop:
-        return "存在匹配字符串"
-    else:
-        return "不存在匹配字符串"
+    print("不存在匹配字符串")
 
 
 def GetNext(p):
@@ -42,18 +42,44 @@ def GetNext(p):
         if k == -1 or p[j] == p[k]:
             k += 1
             j += 1
-            NextArray.append(k)
+            if p[j] != p[k]:
+                NextArray.append(k)
+            else:
+                NextArray.append(NextArray.__getitem__(k))
         else:
             k = NextArray[k]
     return NextArray
 
 
 
+def KmpSearch(s, p):
+    Los = len(s)
+    Lop = len(p)
+
+    i = 0     # String指针
+    j = 0     # Pattern
+
+    NextArray = GetNext(p)
+
+    while i < Los and j < Lop:
+        if j == -1 or s[i] == p[j]:
+            j += 1
+            i += 1
+            if j == Lop:
+                print("存在匹配字符串, 对应字符串位置为{}~{}".format(i - j, i-1))
+                return
+
+        else:
+            j = NextArray.__getitem__(j)
+
+    print("不存在匹配字符串")
 
 
 if __name__ == '__main__':
     s4test = "BBC ABCDAB ABCDABCDABDE"
-    p4test = "ABCDABD"
+    p4test = "BBC"
     # res = ViolentMatch(s4test, p4test)
     # print(res)
-    print(GetNext("ABCDABD"))
+    # print(GetNext("abab"))
+
+    KmpSearch(s4test, p4test)
